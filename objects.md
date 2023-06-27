@@ -92,7 +92,8 @@ print( delete("*.tmp") · delete("*.*~") )
 * оставим dot-notation (`point.x`) только для properties, а для методов будем использовать правый треугольник вместо точки:
 ```kotlin
 files ▸filter 
-  it.type = "image/png" && it.size > 0 
+  it.type = "image/png" &&
+  it.size > 0 
 ▸map { it.name }
 ```
 
