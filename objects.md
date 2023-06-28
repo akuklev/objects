@@ -117,7 +117,7 @@ fun<T : Semigroup(∘)> square(x : T) := (x ∘ x)
 § Stratified Kotlin
 -------------------
 
-(Для понимания дальнейших разделов важно разобраться с двумя подсистемами Kotlin'а: `сontext receivers` + `type-safe builders` и `coroutines`/`suspended computations` + `structured concurrency`.)
+(Для понимания дальнейших разделов важно разобраться с двумя подсистемами Kotlin'а: `сontext receivers` + `type-safe builders` и `coroutines`/`suspended routines` + `structured concurrency`.)
 
 Stratified Kotlin — расширение Pure Kotlin, в котором мы допускаем использование команд и существование псевдовыражений. Для того, чтобы команду всегда можно было отличить от метода, её название должно начинаться с восклицательного знака: `!rand`, `!trace(msg)`, `!return`, `!throw`, `!break`. Исключая такие команды как `!rand` (многоразовые и коммутирующие с т.з. эффектов, которые могут повлиять на дальнейшее выполнение), в одной инструкции может быть использована не более чем одна команда:
 ```kotlin
