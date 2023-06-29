@@ -128,7 +128,7 @@ fun<T : Semigroup(∘)> square(x : T) := (x ∘ x)
 § Stratified Kotlin
 -------------------
 
-(Для понимания дальнейших разделов важно разобраться с двумя подсистемами Kotlin'а: `сontext receivers` + `type-safe builders` и `coroutines`/`suspended routines` + `structured concurrency`.)
+(Для понимания дальнейших разделов важно разобраться с двумя подсистемами Kotlin'а: `сontext receivers` + `type-safe builders` и `coroutines`/`suspensions` + `structured concurrency`.)
 
 Stratified Kotlin — расширение Pure Kotlin, в котором мы допускаем использование команд и существование псевдовыражений. Для того, чтобы команду всегда можно было отличить от метода, её название должно начинаться с восклицательного знака: `!rand`, `!trace(msg)`, `!return`, `!throw`, `!break`. Исключая такие команды как `!rand` (многоразовые и коммутирующие с т.з. эффектов — такие команды называются **псевдозначениями**), в одной инструкции может быть использована не более чем одна команда:
 ```kotlin
@@ -180,33 +180,56 @@ interface Variable<T> {
 }
 ```
 
-Каждое использование любой команды как бы “поглощает” объект целиком, и заменяет его новым, причём новый может вообще говоря иметь другой интерфейс. Если команда меняет интерфейс объекта, относительно которого вызвана, будем обозначать это в её сигнатуре специальной аннотацией `nextState(NextInterface)`:
+Другой христоматийный пример — телетайповый интерфейс взаимодействия с пользователем:
+```
+interface Tty {
+  fun say(msg : String)
+  fun ask<T : Promptable>(prompt : String) : T
+}
+```
+
+Каждое использование любой команды как бы “поглощает” объект целиком, и заменяет его новым, причём новый может вообще говоря иметь другой интерфейс. Если команда меняет интерфейс объекта, относительно которого вызвана, будем обозначать это в её сигнатуре специальной аннотацией `nextState<NextInterface>`:
 ```kotlin
 interface OutputStream {
   fun append(s : String)
-  fun close() nextState(Nothing)
+  fun close() nextState<Nothing>
 }
 ```
 
-Такая сигнатура гарантирует, что команда `!close` может быть использована лишь один раз, причём её вызова уже будет недоступна и команда `!append`. Механизм `nextState(Nothing)` позволяет описать один из важнейших типов объектов — “продолжения” (single-shot continuations):
+Смена состояния на `Nothing` гарантирует, что после вызова `!close` в той же ветви исполнения будут недоступны команды `!close` и `!append`.
+
+Механизм `nextState<Nothing>` позволяет описать один из важнейших типов объектов — “продолжения” (single-shot continuations):
 ```
-fun interface Continuation<T> {
-  fun resume(t : T) : Nothing nextState(Nothing)
+fun interface Suspension<X, Y> {
+  fun resume(x : X) : Y nextState<Nothing>
 }
+
+// Suspension<X, Y> мы будем идентифицировать с `(X) ⊸ Y`
+
+fun interface Continuation<T> {
+  fun resume(t : T) : Nothing
+}
+
+// возвращаемый тип Nothing автоматически означает и nextState<Nothing>
+
 ```
 (Объяснение конструкции fun interface: https://kotlinlang.org/docs/fun-interfaces.html)
 
-
 С использованием `nextState` у объекта больше нет постоянного набора методов — вместо этого у него имеется жизненный цикл, представляющий из себя конечный автомат состояний, и набор и сигнатуры доступных команд зависят от текущего состояния объекта. Котлин уже обладает механизмом smart casts, в результате которого тип переменной может сужаться по ходу выполнения программы — поддержка `nextState` требует расширения этого механизма.
+
+Сигнатуры отдельных команд мы будем записывать вот так:
+```
+Variable<T>::get : (Variable<T>.() ⊸ T)*
+Variable<T>::set : Variable<T>.(T) ⊸ (Unit nextState<Variable<T>>)
+
+OutputStream::append : OutputStream.(String) ⊸ (Unit nextState<OutputStream>)
+OutputStream::close : OutputStream.() ⊸ (Unit nextState<Nothing>)
+```
 
 Для исчерпывающего описания интерфейсов необходимо обеспечить в Stratified Kotlin поддержку зависимых типов. В зависимо-типизированных языках параметрами типов могут являться значения, например `List<T, size := n>`:
 ```kotlin
 interface RandGen {
   fun generateRandomPermutation(size : Nat) : List<Nat, size>
-}
-
-interface Foo {  
-  fun bar(x : X) : Y<x> nextState(S<x, bar(x)>)
 }
 ```
 
@@ -217,7 +240,7 @@ interface Foo {
 ------------------------
 
 Выше мы говорили, что аргументами функций в Pure и Stratified Kotlin могут быть только значения, но не объекты.
-В Stratified Kotlin мы добавим ещё и coroutines также известные как “suspendable functions”. Корутины могут принимать в качестве аргументов приведённые выше продолжения.
+В Stratified Kotlin мы добавим ещё и coroutines также известные как “suspendable functions”. Корутины могут принимать в качестве аргументов приведённые выше продолжения и подвешенные корутины (suspensions).
 
 Всякую функцию `performSomeCalculation(x : X) : Y` мы можем превратить в корутину
 
@@ -236,54 +259,87 @@ context(Log)
 suspend fun useThatCalculation(x : X) : Y {
   !trace("Executing foo.....")
   suspendCoroutine {
-    val y := !performSomeCalculationCPS(x, it)
+    !performSomeCalculationCPS(x, it)
   }
   !trace("After suspending.....")
-
-  !trace("Calculation result is $result")
 }
 ```
 
-TODO:
-1. Эмулируем !throw/catch
-2. Описываем Variable<T>
-3. Structured concurrency
-4. Говорим слова, что при помощи корутин мы можем создавать произвольные системы мутабельных и/или взаимодействующих между собой объектов.
+Прежде мы только описывали объекты, но никогда не создавали их. Операция `suspendCoroutine {obj -> code}` “создаёт” объект `obj`. Мы можем обобщить эту операцию для создания объектов произвольного интерфейса. Правда, для этого нам понадобится аналог when с паттерн-матчингом.
 
-
-Типирование Корутин и Команд
-----------------------------
-
-Для того, чтобы описать типы отдельных корутин и команд, нам понадобится линейная импликация `(X) ⊸ Y`. Аргумент `cont : (X) ⊸ Y` следует понимать, как приостановленную корутину, которую можно и нужно запустить ровно один раз в каждой ветви выполнения. Запустить её нужно с аргументом `x` типа `X`, а результат `!cont(x)` будет типа `Y`. Тип `Continuation<T>` является частным случаем `(T) ⊸ Nothing`.
-
-Если нам доступна команда `foo` объекта с интерфейсом
 ```kotlin
-interface Foo {
-  ...
-  val meh : T
-  
-  fun foo(x : X) : Y nextState<Nothing>
-  fun zoo(x : X) : Y
-  fun bar(x : X) : Y nextState<S>
-  fun gnu(x : X) : Y<x> nextState<S<x, meh>>
+interface S1 {
+  foo(x : X) : Y nextState<S2>
+  bar(a : A) : B nextstate<S2>
   ...
 }
 
-// Now, in the body of an Foo-extending method we have
-meh : (Foo.() ⊸ T)*
-foo : Foo.(X) ⊸ Y
-zoo : Foo.(X) ⊸ Y
-bar : Foo.(X) ⊸ Y nextState<S>
-gnu : Foo.(x : X) ⊸ Y nextState<S<x, this.meh>>
+suspend fun zee(f : S1.(T) ⊸ R, t : T) : S {
+  suspend.f(t) {
+    foo(x : X) ↦ {cont : (S2.(Y) ⊸ R) ↦ 
+      // something consuming cont and returning S
+    }
+    bar(a : A) ↦ {cont : (S2.(B) ⊸ R) ↦ 
+      // something consuming cont and returning S
+    }
+    return(r : R) ↦ {
+      // something returning S
+    }
+  }
+}
 ```
 
-Когда мы определяем корутину, не замыкая в неё ничего кроме значений и псевдозначений, она сама является псевдозначением.
-Возвращаясь к примерам из предыдущего раздела:
+В частности мы можем реализовать поддержку переменных, исключений и генераторов:
 ```kotlin
-useThatCalculation : ((X) ⊸ Y)*
-performSomeCalculationCPS : ((x : X, cont : Continuation<Y>) ⊸ Nothing)*
+suspend fun<T, R, vararg Xs> withVar(f : Variable<T>.(*Xs) ⊸ R, v : T? := null) : R {
+  suspend.f {
+    val get := v
+    
+    set(v : Int) ↦ {
+      withVar(it, v)
+    } 
+    
+    return(r : R) ↦ r
+}
 ```
 
+```kotlin
+interface Throws<E> {
+  throw(e : E) : Nothing
+}
+
+suspend fun<E, R> try(f : Throws<E>.() ⊸ R, handler : E -> R) : R {
+  suspend.f {
+    throw(e : R) ↦ handler(e)
+    return(r : R) ↦ r  
+  }
+}
+```
+
+```kotlin
+interface Generator<T> {
+  yield(g : T)
+}
+
+suspend fun<R> sum(generator : Generator<Int>.() ⊸ Unit, accumulator : Int := 0) {
+  suspendInto(generator) {
+    yield(v) ↦ {it : (State.(RetType) ⊸ R) ↦
+      sum(it, v + accumulator)
+    }
+    return ↦ accumulator
+  }
+}
+```
+
+**TODO: Описать взаимодействие со Structured concurrency**
+
+Когда мы определяем корутину, не замыкая внутрь объектов (значения и псевдозначения замыкать можно), сама корутина представляет из себя псевдозначение:
+```
+::performSomeCalculationCPS : ( (x : X, cont : (Y) ⊸ Nothing) ⊸ Nothing )*
+::useThatCalculation : (Log.(X) ⊸ Y)*
+```
+
+Для описания ситуаций, когда мы замыкаем внутрь корутины объекты, нам понадобится дополнительная машинерия, описываемая сепарационной логикой — ownership, borrowing.
 
 § Линейная логика
 -----------------
@@ -292,13 +348,14 @@ performSomeCalculationCPS : ((x : X, cont : Continuation<Y>) ⊸ Nothing)*
 ```
 // Consumer-controlled disjunction:
 interface Foo & Bar {
-   fun !foo() nextState(Foo)
-   fun !bar() nestState(Bar)
+   fun !foo() nextState<Foo>
+   fun !bar() nestState<Bar>
 }
 
 // Server-controlled disjunction:
 interface Foo ⊕ Bar {
-   fun !get() : (r : Bool) nextState(if(r) Foo else Bar)
+   val which : Bool
+   fun !get() nextState<if(this.which) Foo else Bar>
 }
 ```
 
