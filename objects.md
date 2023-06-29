@@ -1,5 +1,5 @@
-Stratified Kotlin — Деконструкция ООП
-=====================================
+Stratified Kotlin — Deconstruction of concurrent object-oriented programming
+============================================================================
 
 
 § Объекты и Данные
