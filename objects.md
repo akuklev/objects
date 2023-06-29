@@ -106,13 +106,11 @@ files ▸filter
 
 Мы также предлагаем ввести `codata classes`:
 ```kotlin
-codata class Seq<T>(val head : T) {
+codata class Seq<T>(val head : T)
   fun next() : Seq<T>
-}
 
-foo fib(prev : Int := 1, head : Int := 1) := Seq<T>(head) {
+foo fib(prev : Int := 1, head : Int := 1) := Seq<T>(head)
   fun next() := fib(head, head + prev) 
-}
 ```
 
 Pure Kotlin может быть расширен индуктивными типами, чекером тотальности и зависимыми типами.
