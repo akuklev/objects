@@ -181,7 +181,7 @@ interface Variable<T> {
 Другой христоматийный пример — телетайповый интерфейс взаимодействия с пользователем:
 ```
 interface Tty {
-  fun say(msg : String)
+  fun print(msg : String)
   fun ask<T : Promptable>(prompt : String) : T
 }
 ```
