@@ -114,7 +114,7 @@ foo fib(prev : Int := 1, head : Int := 1) := Seq<T>(head)
 ```
 
 И typeclasses:
-```
+```kotlin
 data class <T>.Monoid(operator val ‹compose› : (vararg xs : T)-> T)
   val unit := compose() // unit is the nullary composition
   contracts {
