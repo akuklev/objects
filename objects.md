@@ -113,15 +113,30 @@ foo fib(prev : Int := 1, head : Int := 1) := Seq<T>(head)
   fun next() := fib(head, head + prev) 
 ```
 
-Pure Kotlin может быть расширен индуктивными типами, чекером тотальности и зависимыми типами.
-
-<!--
-```kotlin
-fun<T : Semigroup> square(x : T) := (x ‹T.compose› x)
-
-fun<T : Semigroup(∘)> square(x : T) := (x ∘ x)
+И typeclasses:
 ```
--->
+data class <T>.Monoid(operator val ‹compose› : (vararg xs : T)-> T)
+  val unit := compose() // unit is the nullary composition
+  contracts {
+    unit ‹compose› x = x
+    x ‹compose› unit = x
+    (x ‹compose› y) ‹compose› z = x ‹compose› (y ‹compose› z)
+    
+    compose(x, xs) = x ‹compose› compose(xs)
+  }
+
+// А теперь мы можем вот так:
+
+fun<T : Monoid> square(x : T)
+  x ‹T.compose› x
+
+// И так:
+
+fun<T : Monoid(`∘`)> square(x : T)
+  x ∘ x
+```
+
+Pure Kotlin может быть расширен индуктивными типами, чекером тотальности и зависимыми типами.
 
 § Stratified Kotlin
 -------------------
