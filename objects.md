@@ -147,8 +147,9 @@ files ▸filter
 codata class Seq<T>(val head : T)
   fun next() : Seq<T>
 
-foo fib(prev : Int := 1, head : Int := 1) := Seq<T>(head)
-  fun next() := fib(head, head + prev) 
+foo fib(head : Int := 1,
+        prev : Int := 1) := Seq<T>(head)
+  fun next() := fib(head + prev, head) 
 ```
 
 **Определение Моноида**
