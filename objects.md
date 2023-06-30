@@ -159,9 +159,9 @@ data class <T>.Monoid(operator val ‹compose› : (vararg xs : T)-> T)
   contracts {
     unit ‹compose› x = x
     x ‹compose› unit = x
-    (x ‹compose› y) ‹compose› z = x ‹compose› (y ‹compose› z)
+    x ‹compose› y ‹compose› z = x ‹compose› (y ‹compose› z)
     
-    compose(x, xs) = x ‹compose› compose(xs)
+    compose(x, *xs) = x ‹compose› compose(*xs)
   }
 
 // А теперь мы можем вот так:
