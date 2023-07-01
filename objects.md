@@ -357,7 +357,7 @@ interface Variable<T>
 *  `Heap`, внутри которого можно создавать `SharableMutableVariables`;
 *  `CoroutineContext`, внутри которого можно запускать `Worker`ов.
  
-Контракты таких объектов требуют описание отношения отдельности подобъектов в терминах partial commutative monoids, и порождают не монаду Дейкстры, а более богатый математический объект, внутренним языком оторого является weakest precondition-based concurrent separation logic (IRIS).
+Контракты таких объектов требуют описание отношения отдельности подобъектов в терминах resource algebras, и порождают не монаду Дейкстры, а более богатый математический объект, внутренним языком оторого является weakest precondition-based concurrent separation logic (IRIS).
 
 <p align="center">* * *</p>
 
