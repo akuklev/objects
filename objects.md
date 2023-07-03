@@ -70,8 +70,9 @@ suspend fun f(..., cont : Continuation<X>) {
 
 ```kotlin
 suspend fun f(args, gen : Generator<T>) {
-  ...
   val x := gen.next()
+  ...
+  val y := gen.next()
   ...
 }
 ```
