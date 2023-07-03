@@ -31,6 +31,7 @@ with(open("./storage.dat")) {
   // here `this` will refer to the file accessor object 
   // we may use `read` and `write` commands
 }
+```
 
 Притом один и тот же файл может быть одновременно открыт на чтение много раз. Базы данных и очереди (message queues) допускают также и многократное открытие “на запись”.
 
