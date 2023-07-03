@@ -244,11 +244,11 @@ fun Env▸main(args : List<String>)
   // so we can use `!print`, `!open` and many other commands here
   
   !print("Starting...")
-  with(!open("config.ini")) {
+  
+  with(!open("config.ini"))
     // This block is a closure receiving an opened file as a context
     // here we may additionally use `!read` and `!write`
     ...
-  }
   !print("Finished reading configuration...")  
 ```
 — где `Env` — **объектный интерфейс**, т.е. интерфейс, описывающий набор доступных команд, их сигнатуры и поведение.
@@ -282,10 +282,9 @@ interface Tty
 
 Каждое использование команды как бы “поглощает” объект целиком, и подменяет его новым, причём новый может вообще говоря иметь другой интерфейс. Если команда меняет интерфейс объекта, относительно которого вызвана, будем обозначать это в её сигнатуре специальной аннотацией `nextState<NextInterface>`:
 ```kotlin
-interface OutputStream {
+interface OutputStream
   fun append(s : String)
   fun close() nextState<Nothing>
-}
 ```
 
 Смена состояния на `Nothing` гарантирует, что после вызова `!close` в той же ветви исполнения будут недоступны команды `!close` и `!append`.
@@ -332,13 +331,12 @@ interface RandGen
 
 Используя равенство эффектов мы можем указать важнейшее свойство команды `!rand` — отсутствие побочных эффектов:
 ```kotlin
-interface RandGen {
+interface RandGen
   val !rand: Int
   
   contracts {
     {!rand} =e= {}
   }
-}
 ```
 
 Равенство результатов вообще говоря нерефлексивное, например `!rand =r= !rand` **не**
@@ -374,6 +372,7 @@ interface Variable<T>
 
     {!set(x1); !set(x2)} =e= {!set(x2)}     
     {!set(x); !get} =r= x
+  }
 ```
 
 Обратите внимание, что из контрактов и сигнатуры прямо следует, что `!get` может возвращать `null` только до первого вызова `!set`, но не очевидно, что он обязан выдавать именно `null` до первого вызова `!set`. Однако легко показать, что это единственное возможное поведение, если в качестве параметра `T` подставить `Nothing`, а из параметричности следует что при использовании любого другого типа поведение должно оставаться таким же.
