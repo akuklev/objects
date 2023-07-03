@@ -573,6 +573,8 @@ suspend fun<R> sum(generator : Generator<Int>▸() ⊸ Unit, accumulator : Int :
 
 Можно создать анонимную корутину, и целиком передать внутрь корутины объекты (ownership transfer), которые в этом случае должны быть там истрачены или тем или иным способом переданы дальше — в этом случае корутина будет иметь тип вида `(*Xs) ⊸ Y`. 
 
+При помощи нехитрой трансляции в экспериментальный язык Rast из вышеупоминавшейся статьи [[Das-Pfennig20]] можно показать, что в терминах корутин и structured concurrency мы можем создавать имплементации всех типируемых в описанном нам исчислении объектов.
+
 § Объекты и линейная логика
 ---------------------------
 
@@ -582,13 +584,13 @@ suspend fun<R> sum(generator : Generator<Int>▸() ⊸ Unit, accumulator : Int :
 ```kotlin
 // Consumer-controlled disjunction:
 interface Foo & Bar
-  fun !foo() nextState<Foo>
-  fun !bar() nestState<Bar>
+  fun foo() nextState<Foo>
+  fun bar() nestState<Bar>
 
 // Server-controlled disjunction:
 interface Foo ⊕ Bar
   val which : Bool
-  fun !get() nextState<if(this.which) Foo else Bar>
+  fun get() nextState<if(this.which) Foo else Bar>
 ```
 
 Коньюнкции: **(TBD, в терминах корутин)**
