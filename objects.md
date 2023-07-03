@@ -37,8 +37,8 @@ with(open("./storage.dat")) {
 
 Некоторые ресурсы таковы, что мы можем разбить их время на изолированные части. Например, изменяемый массив можно разбить на любое количество подмассивов с непересекающимися индексами:
 ```kotlin
-suspend fun quicksort(arr :  MutableArray) {
-  if(arr.size <= 1) return
+suspend fun quicksort(arr : MutableArray) {
+  if (arr.size <= 1) {return}
   
   val pivot := partition(arr)
   
