@@ -352,7 +352,7 @@ interface Variable<T>
 Другой канонический пример — телетайповый интерфейс взаимодействия с пользователем:
 ```kotlin
 interface Tty
-  fun print(msg : String)
+  fun say(msg : String)
   fun ask<T : Promptable>(prompt : String) : T
 ```
 
