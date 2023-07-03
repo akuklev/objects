@@ -295,7 +295,7 @@ interface OutputStream {
 fun interface Suspension<X, Y>
   fun resume(x : X) : Y nextState<Nothing>
 
-// Suspension<X, Y> мы будем идентифицировать с `(X) ⊸ Y`
+// Suspension<X, Y> мы будем идентифицировать с `(X)⊸ Y`
 
 fun interface Continuation<T>
   fun resume(t : T) : Nothing
@@ -309,11 +309,11 @@ fun interface Continuation<T>
 
 Сигнатуры отдельных команд мы будем записывать вот так:
 ```
-Variable<T>::get : (Variable<T>.() ⊸ T)*
-Variable<T>::set : Variable<T>.(T) ⊸ (Unit nextState<Variable<T>>)
+Variable<T>::get : (Variable<T>▸()⊸ T)*
+Variable<T>::set : Variable<T>▸(T)⊸ (Unit nextState<Variable<T>>)
 
-OutputStream::append : OutputStream.(String) ⊸ (Unit nextState<OutputStream>)
-OutputStream::close : OutputStream.() ⊸ (Unit nextState<Nothing>)
+OutputStream::append : OutputStream▸(String)⊸ (Unit nextState<OutputStream>)
+OutputStream::close : OutputStream▸()⊸ (Unit nextState<Nothing>)
 ```
 
 Для исчерпывающего описания интерфейсов необходимо обеспечить в Stratified Kotlin поддержку зависимых типов. В зависимо-типизированных языках параметрами типов могут являться значения, например `List<T, size : Nat>`:
@@ -441,12 +441,12 @@ interface S1
   bar(a : A) : B nextstate<S2>
   ...
 
-suspend fun zee(f : S1.(T) ⊸ R, t : T) : S {
+suspend fun zee(f : S1▸(T) ⊸ R, t : T) : S {
   suspend.f(t) {
-    foo(x : X) ↦ {cont : (S2.(Y) ⊸ R) ↦ 
+    foo(x : X) ↦ {cont : (S2▸(Y) ⊸ R) ↦ 
       // something consuming cont and returning S
     }
-    bar(a : A) ↦ {cont : (S2.(B) ⊸ R) ↦ 
+    bar(a : A) ↦ {cont : (S2▸(B) ⊸ R) ↦ 
       // something consuming cont and returning S
     }
     return(r : R) ↦ {
@@ -458,7 +458,7 @@ suspend fun zee(f : S1.(T) ⊸ R, t : T) : S {
 
 В частности мы можем реализовать поддержку переменных, исключений и генераторов:
 ```kotlin
-suspend fun<T, R, vararg Xs> withVar(f : Variable<T>.(*Xs) ⊸ R, v : T? := null) : R {
+suspend fun<T, R, vararg Xs> withVar(f : Variable<T>▸(*Xs) ⊸ R, v : T? := null) : R {
   suspend.f {
     val get := v
     
@@ -474,7 +474,7 @@ suspend fun<T, R, vararg Xs> withVar(f : Variable<T>.(*Xs) ⊸ R, v : T? := null
 interface Throws<E>
   throw(e : E) : Nothing
 
-suspend fun<E, R> try(f : Throws<E>.() ⊸ R, handler : E -> R) : R {
+suspend fun<E, R> try(f : Throws<E>▸() ⊸ R, handler : E -> R) : R {
   suspend.f {
     throw(e : R) ↦ handler(e)
     return(r : R) ↦ r  
@@ -486,9 +486,9 @@ suspend fun<E, R> try(f : Throws<E>.() ⊸ R, handler : E -> R) : R {
 interface Generator<T>
   yield(g : T)
 
-suspend fun<R> sum(generator : Generator<Int>.() ⊸ Unit, accumulator : Int := 0) {
+suspend fun<R> sum(generator : Generator<Int>▸() ⊸ Unit, accumulator : Int := 0) {
   suspendInto(generator) {
-    yield(v) ↦ {it : (State.(RetType) ⊸ R) ↦
+    yield(v) ↦ {it : (State▸(RetType) ⊸ R) ↦
       sum(it, v + accumulator)
     }
     return ↦ accumulator
@@ -499,7 +499,7 @@ suspend fun<R> sum(generator : Generator<Int>.() ⊸ Unit, accumulator : Int := 
 Когда мы определяем корутину, не замыкая внутрь объектов (значения и псевдозначения замыкать можно), сама корутина представляет из себя псевдозначение:
 ```kotlin
 ::performSomeCalculationCPS : ( (x : X, cont : (Y) ⊸ Nothing) ⊸ Nothing )*
-::useThatCalculation : (Log.(X) ⊸ Y)*
+::useThatCalculation : (Log▸(X) ⊸ Y)*
 ```
 
 Можно создать анонимную корутину, и целиком передать внутрь корутины объекты (ownership transfer), которые в этом случае должны быть там истрачены или тем или иным способом переданы дальше — в этом случае корутина будет иметь тип вида `(*Xs) ⊸ Y`. 
