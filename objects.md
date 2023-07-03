@@ -80,7 +80,7 @@ suspend fun f(args, gen : Generator<T>) {
 Сервисы — обобщение генераторов: они могут поддерживать несколько разных запросов (скажем, `ask` и `say`), запросы к ним могут принимать аргументы (скажем, `ask(prompt)` и `say(message)`):
 
 ```kotlin
-with(Tty) suspend fun foo() {
+with<Tty> suspend fun foo() {
   var total = 0;
   repeat {
     total += ask<Int>("Please enter a number")
