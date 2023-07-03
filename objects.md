@@ -570,15 +570,6 @@ suspend fun<R> sum(generator : Generator<Int>▸() ⊸ Unit, accumulator : Int :
 
 Можно создать анонимную корутину, и целиком передать внутрь корутины объекты (ownership transfer), которые в этом случае должны быть там истрачены или тем или иным способом переданы дальше — в этом случае корутина будет иметь тип вида `(*Xs) ⊸ Y`. 
 
-**TODO: Описать взаимодействие со Structured concurrency**
-
-Мы познакомились со всеми важнейшими в программировании категориями объектов:
-* generators/services;
-* suspensions/continuations;
-* workers/actors;
-* factories;
-* resources.
-
 § Объекты и линейная логика
 ---------------------------
 
