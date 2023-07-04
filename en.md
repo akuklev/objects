@@ -12,7 +12,7 @@ Special thanks are due to Galina Ryazanskaya and Konstantin Uvarin, who greatly 
 § Objects and Data
 ------------------
 
-[Tony Hoare](https://en.wikipedia.org/wiki/Tony_Hoare) once called [null pointers](https://en.wikipedia.org/wiki/Null_pointer) “a billion dollar mistake”. The history of programming languages might have encountered a misconception that costs even more: ignoring the fundamental discrepancy between _values_ and _objects_.
+[Tony Hoare](https://en.wikipedia.org/wiki/Tony_Hoare) once called [null pointers](https://en.wikipedia.org/wiki/Null_pointer) “a billion dollar mistake”. The history of programming languages might have encountered a misconception even more costly: ignoring the fundamental discrepancy between _values_ and _objects_.
 
 Innately, we perceive the world around us and its processes through images and sensations, and this is sufficient for reasoning using analogies and heuristics. However, clear instructions and rigorous reasoning require us to draw artificial boundaries and decompose the world into idealised modelling units: **Objects are the idealised modelling units.** Depending on the subject domain, these might be, for instance, apples and pears, orders and invoices, trains and stations, or electrons and photons. We learn this art as we learn to talk and think in words, and further refine it by learning programming (‘clear instructions’) and mathematics (‘rigorous reasoning’). The canonical examples of material objects in programming are a memory cell containing a mutable integer value, and the [program-level POSIX environment](https://en.wikipedia.org/wiki/POSIX) the programs run in.
 
