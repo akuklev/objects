@@ -20,8 +20,7 @@ Now suppose we have read the value from a memory cell and weighted an apple, obt
 
 Objects admit the concept of sameness. For instance, two different boxes may contain equal integer values, but that does not make them the same box - if you change a value in one, it will not change in the other. Objects can emerge/be created and disappear/be consumed, i.e. they also admit the concept of lifecycle.
 
-К значениям, применимо понятие “равный” (equal), но не “тот же”. Быть равными — это свойство пары значений: равенство может быть доказано или опровергнуто, а вот быть одним и тем же объектом можно только по определению. Более того, невозможно вообще корректно определить пару из объекта с самим собой — пара объектов это автоматически пара двух разных объектов.
-Также неприменимо к значениям понятие жизненного цикла, про них даже нельзя сказать что они “всегда были и будут” — они просто вне времени и материального мира.
+Values admit the concept of equality, but not the concept of sameness. Being equal is a property of a pair of values: equality can be proven or refuted, whereas being the one and the same object is only so by definition and cannot be formulated as a property of two objects. Furthermore, it is impossible to properly define a pair of an object and itself - a pair of objects is automatically a pair of two distinct objects. The notion of lifecycle is also inapplicable to values, values cannot even be said to have "always existed" - they are simply outside of time and the material world.
 
 Теперь, ознакомившись с базовыми понятиями и обрисовав фундаментальные различия, разберёмся зачем проектировать языки программирования с учётом этих различий. Но прежде, чтобы твёрдо почувствовать разницу между объектами и данными, разберём её на примерах. В примерах я буду пользоваться вымышленным языком с синтаксисом на основе Kotlin'а.
 
