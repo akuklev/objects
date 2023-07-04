@@ -1,8 +1,8 @@
 Stratified Kotlin — Deconstruction of Concurrent Object-Oriented Programming
 ============================================================================
 
-__Alexander Kuklev__* <a@kuklev.com>
-*[JetBrains Research, HoTT and Dependent Types Lab](https://lp.jetbrains.com/research/hott-and-dependent-types/)
+__Alexander Kuklev__* \<a@kuklev.com\>  
+*[JetBrains Research, HoTT and Dependent Types Lab](https://lp.jetbrains.com/research/hott-and-dependent-types/)  
 *[Radboud University Nijmegen, Department of Software Science](https://sws.cs.ru.nl/)
 
 Special thanks are due to Galina Ryazanskaya, who greatly assisted in the editing of this document.
