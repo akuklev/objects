@@ -22,7 +22,7 @@ Objects admit the concept of sameness. For instance, two different boxes may con
 
 Values admit the concept of equality, but not the concept of sameness. Being equal is a property of a pair of values: equality can be proven or refuted, whereas being the one and the same object is only so by definition and cannot be formulated as a property of two objects. Furthermore, it is impossible to properly define a pair of an object and itself - a pair of objects is automatically a pair of two distinct objects. The notion of lifecycle is also inapplicable to values, values cannot even be said to have "always existed" - they are simply outside of time and the material world.
 
-Now that we've outlined the basic concepts and their fundamental differences, let's sort out why programming languages should be designed with these differences in mind. But first, to get a firm feel for the conceptual differences between objects and data, let's break them down using examples. For the examples, I will use a fictional programming language based on Kotlin.
+Now that we've outlined the basic concepts and their fundamental differences, let's sort out why programming languages should be designed with these differences in mind. But first, to get a firm feel for the conceptual differences between objects and data, let's break them down using examples. For the examples, I will use a fictional programming language based on [Kotlin](https://kotlinlang.org/).
 
 § Какие объекты встречаются в программировании?
 -----------------------------------------------
