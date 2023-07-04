@@ -18,7 +18,7 @@ Innately we perceive the world around us and its processes through images and se
 
 Now suppose we have read the value from a memory cell and weighted an apple, obtaining `X.value = 2` and `Apple1.weight = 93g`. The memory cell X and the apple Apple1 mentioned here are material objects, but the "integer number 2" and "93 grams" are “platonic objects" that exist only in the world of mathematical abstractions. Those will be referred as data (plural only) or value (being a singular for “piece data”). **Data is information detached from its medium and context.**
 
-К объектам применимо понятие “тот же самый, один и тот же” (same). Так в двух разных ящиках могут лежать равные числа, но это не делает их одним и тем же ящиком — если в одном поменять значение, оно не поменяется в другом. Объекты могут возникать/порождаться и исчезать/поглощаться, к ним применимо понятие жизненного цикла (lifecycle).
+Objects admit the concept of sameness. For instance, two different boxes may contain equal integer values, but that does not make them the same box - if you change a value in one, it will not change in the other. Objects can emerge/be created and disappear/be consumed, i.e. they also admit the concept of lifecycle.
 
 К значениям, применимо понятие “равный” (equal), но не “тот же”. Быть равными — это свойство пары значений: равенство может быть доказано или опровергнуто, а вот быть одним и тем же объектом можно только по определению. Более того, невозможно вообще корректно определить пару из объекта с самим собой — пара объектов это автоматически пара двух разных объектов.
 Также неприменимо к значениям понятие жизненного цикла, про них даже нельзя сказать что они “всегда были и будут” — они просто вне времени и материального мира.
