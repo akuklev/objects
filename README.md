@@ -382,7 +382,7 @@ interface OutputStream
 ```
 
 Смена состояния на `Nothing` гарантирует, что после вызова `!close` в той же ветви исполнения будут уже недоступны команды `!close` и `!append`. Этот механизм позволяет описать один из важнейших типов объектов — подвешенные процессы (single-shot suspensions):
-```
+```kotlin
 fun interface Suspension<X, Y>
   fun resume(x : X) : Y ⏴Nothing
 
@@ -400,7 +400,7 @@ interface Continuation<T>
 
 В Котлине для описания типов функций используется обозначение `(Xs)-> Y`, а для описания методов существует специальное обозначение `Context▸(Xs)-> Y`. Выше мы уже вводили обозначение `(Xs)⊸ Y`, называемое линейной импликацией. По аналогии введём для команд обозначение `Interface▸(Xs)⊸ Y`, а если команда подменяет интерфейс своего объекта, то `Interface▸(Xs)⊸ Y⏴NewInterface`. Для псевдозначений будем использовать обёртку `(_)!` известную как “replicable service modality”.
 
-```
+```kotlin
 Variable<T>::set : Variable<T>▸(T)⊸ Unit
 Variable<T>::get : (Variable<T>▸()⊸ T)!
 
@@ -425,7 +425,7 @@ interface RandGen
 Используя равенство эффектов мы можем указать важнейшее свойство команды `!rand` — отсутствие побочных эффектов:
 ```kotlin
 interface RandGen
-  val !rand: Int
+  val rand: Int
   
   contracts {
     {!rand} =e= {}
