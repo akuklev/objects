@@ -8,7 +8,7 @@ _Alexander Kuklev_* \<a​@​kuk​lev.com\>
 \* [JetBrains Research, HoTT and Dependent Types Lab](https://lp.jetbrains.com/research/hott-and-dependent-types/)  
 \* [Radboud University Nijmegen, Department of Software Science](https://sws.cs.ru.nl/)
 
-Special thanks are due to Galina Ryazanskaya, who greatly assisted editing this document.
+Special thanks are due to Galina Ryazanskaya, who greatly assisted in  editing this document.
 
 § Объекты и Данные
 ------------------
